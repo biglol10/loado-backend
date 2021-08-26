@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const connectDB = require("./config/db");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+var path = require("path");
 
 // middleware
 const errorHandler = require("./middleware/error");
