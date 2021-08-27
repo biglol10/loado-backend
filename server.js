@@ -39,6 +39,11 @@ if (process.env.NODE_ENV === "development") {
 app.use("/loado/api/homeworks", homeworks);
 app.use("/loado/api/users", usersRoute);
 
+app.use(express.static(path.join(__dirname, "build")));
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
+
 // this should be below controller to use
 app.use(errorHandler);
 
