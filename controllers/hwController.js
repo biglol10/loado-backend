@@ -213,8 +213,9 @@ exports.updateDailyHomework = asyncHandler(async (req, res, next) => {
 
   // 매일 오전 5시 50분 부터 오전 6시 10분 사이
   if (
-    (what_hour === 5 && what_minute > 50) ||
-    (what_hour === 6 && what_minute < 10)
+    // (what_hour === 5 && what_minute > 50) ||
+    // (what_hour === 6 && what_minute < 10)
+    1 === 1
   ) {
     const totalHomeworks = await UserLoado.find();
 
