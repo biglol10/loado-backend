@@ -19,6 +19,7 @@ router
   .delete(protect, deleteHomework);
 // .get(getUserHomeworks)
 
-router.route("/loadoupdatework").post(protect, updateDailyHomework);
+// router.route("/loadoupdatework").post(protect, updateDailyHomework);
+router.route("/loadoupdatework").get(updateDailyHomework);
 
 module.exports = router;
