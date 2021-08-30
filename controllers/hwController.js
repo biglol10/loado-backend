@@ -3,14 +3,13 @@ const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
 var moment = require("moment");
 require("moment-timezone");
-moment.tz.setDefault("Asia/Seoul");
 
 //flymogi.tistory.com/30 [하늘을 난 모기]
 
 // @desc        Get all homeworks
 // @route       GET /loado/api/homeworks
 // @access      Private
-출처: https: exports.getHomeworks = asyncHandler(async (req, res, next) => {
+exports.getHomeworks = asyncHandler(async (req, res, next) => {
   const userHomeworks = await UserLoado.find();
   //   const result = userHomeworks.skip(skip).limit(limit);
 
@@ -205,6 +204,7 @@ exports.updateHomework = asyncHandler(async (req, res, next) => {
 });
 
 exports.updateDailyHomework = asyncHandler(async (req, res, next) => {
+  moment.tz.setDefault("Asia/Seoul");
   let m_date = moment();
   let date = m_date.format("YYYY-MM-DD HH:mm:ss dddd");
   const what_day = m_date.day();
@@ -246,21 +246,24 @@ exports.updateDailyHomework = asyncHandler(async (req, res, next) => {
 // 비동기 처리함수
 const asyncUpdate = async (req_day, hwList) => {
   hwList.map(async (item, idx) => {
-    const chaosRestAdd =
-      (2 - item.chaosDone) * 10 + item.chaosRestValue > 100
-        ? 100
-        : (2 - item.chaosDone) * 10 + item.chaosRestValue;
-    const guardianRestAdd =
-      (2 - item.guardianDone) * 10 + item.guardianRestValue > 100
-        ? 100
-        : (2 - item.guardianDone) * 10 + item.guardianRestValue;
-    const eponaRestAdd =
-      (3 - item.eponaDone) * 10 + item.eponaRestValue > 100
-        ? 100
-        : (3 - item.eponaDone) * 10 + item.eponaRestValue;
-    item.chaosRestValue = chaosRestAdd;
-    item.guardianRestValue = guardianRestAdd;
-    item.eponaRestValue = eponaRestAdd;
+    // 휴식게이지 고정이 아닌 경우만
+    if (!item.dontChange) {
+      const chaosRestAdd =
+        (2 - item.chaosDone) * 10 + item.chaosRestValue > 100
+          ? 100
+          : (2 - item.chaosDone) * 10 + item.chaosRestValue;
+      const guardianRestAdd =
+        (2 - item.guardianDone) * 10 + item.guardianRestValue > 100
+          ? 100
+          : (2 - item.guardianDone) * 10 + item.guardianRestValue;
+      const eponaRestAdd =
+        (3 - item.eponaDone) * 10 + item.eponaRestValue > 100
+          ? 100
+          : (3 - item.eponaDone) * 10 + item.eponaRestValue;
+      item.chaosRestValue = chaosRestAdd;
+      item.guardianRestValue = guardianRestAdd;
+      item.eponaRestValue = eponaRestAdd;
+    }
 
     item.chaosDone = 0;
     item.guardianDone = 0;

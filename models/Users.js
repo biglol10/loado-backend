@@ -23,6 +23,9 @@ const UserSchema = new mongoose.Schema({
     minlength: 2,
     select: false, // when we get user through api it is not going to be shown
   },
+  lastLogin: {
+    type: String,
+  },
 });
 
 // Encrypt password using bcrypt (acts like middleware before saving user)

@@ -107,6 +107,10 @@ const UserLoadoSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  dontChange: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("UserLoado", UserLoadoSchema);

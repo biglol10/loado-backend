@@ -8,11 +8,18 @@ const asyncHandler = require("../middleware/async");
 exports.register = asyncHandler(async (req, res, next) => {
   const { name, userId, password } = req.body;
 
+  var moment = require("moment");
+  require("moment-timezone");
+  moment.tz.setDefault("Asia/Seoul");
+  let m_date = moment();
+  let date = m_date.format("YYYY-MM-DD HH:mm:ss");
+
   // Create user
   const user = await User.create({
     name,
     userId,
     password,
+    date,
   });
 
   //   // Create Token
@@ -44,6 +51,16 @@ exports.login = asyncHandler(async (req, res, next) => {
   if (!isMatch) {
     return next(new ErrorResponse("로그인에 실패했습니다", 401));
   }
+
+  var moment = require("moment");
+  require("moment-timezone");
+  moment.tz.setDefault("Asia/Seoul");
+  let m_date = moment();
+  let date = m_date.format("YYYY-MM-DD HH:mm:ss");
+
+  user.lastLogin = date;
+
+  await user.save();
 
   //   // Create token
   //   const token = user.getSignedJwtToken();
