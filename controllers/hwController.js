@@ -263,11 +263,11 @@ const asyncUpdate = async (req_day, hwList) => {
       item.chaosRestValue = chaosRestAdd;
       item.guardianRestValue = guardianRestAdd;
       item.eponaRestValue = eponaRestAdd;
-    }
 
-    item.chaosDone = 0;
-    item.guardianDone = 0;
-    item.eponaDone = 0;
+      item.chaosDone = 0;
+      item.guardianDone = 0;
+      item.eponaDone = 0;
+    }
 
     // 주간 컨탠츠 초기화 (수요일 5시 50분 부터 수요일 6시 10분 사이)
     if (req_day === 3) {
