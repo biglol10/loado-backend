@@ -14,6 +14,7 @@
   1. React - https://www.udemy.com/course/mernstack-nextjs-withsocketio/
   2. Express - https://www.udemy.com/course/nodejs-api-masterclass/
   3. Html, js, css - https://www.udemy.com/course/web-projects-with-vanilla-javascript/
+  4. Open source UI library - https://react.semantic-ui.com/
  
 <br/>
 
