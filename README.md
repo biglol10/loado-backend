@@ -32,5 +32,14 @@
   5. AWS 가상서버로 매일 06시에 배치를 돌려 매일 06시 기준 휴식게이지 정산 
   6. 매주 수요일은 주간컨탠츠 (군단장) 초기화
 
+<br/>
+
+기술적인 부분
+  1. Mongoose model schema의 pre 기능과 bcrypt를 이용해 암호를 저장하기 전 암호화 진행
+  2. Mongoose model에 함수를 구현하여 비밀번호 매칭 및 토큰 가져오기 기능 구현
+  3. 반복적인 try-catch 구문을 스킵하기 위해 asyncHandler 구현
+  4. 직관성을 위해 오류 메시지와 코드를 넘겨주는 ErrorResponse 클래스 구현
+  5. Auth middleware로 사용자 authentication 기능 구현
+  6. 매일 06 배치를 돌릴 때 돌려야 하는 리스트를 반으로 나눠 비동기 작업을 진행
 
 
