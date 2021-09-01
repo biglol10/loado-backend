@@ -41,5 +41,6 @@
   4. 직관성을 위해 오류 메시지와 코드를 넘겨주는 ErrorResponse 클래스 구현
   5. Auth middleware로 사용자 authentication 기능 구현
   6. 매일 06 배치를 돌릴 때 돌려야 하는 리스트를 반으로 나눠 비동기 작업을 진행
+  7. Routing에 auth 기능 추가
 
 
