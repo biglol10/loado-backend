@@ -1,6 +1,7 @@
 # loado-backend
 로스트아크 숙제관리 백엔드 + React build 폴더
 
+접속 URL: https://loado-app.herokuapp.com
 
 <br/>
 
