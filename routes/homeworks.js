@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 const {
   getHomeworks,
   createHomework,
@@ -6,20 +6,22 @@ const {
   deleteHomework,
   getUserHomeworks,
   updateDailyHomework,
-} = require("../controllers/hwController");
+  updatePersonalHomework,
+} = require('../controllers/hwController');
 
 const router = express.Router();
 
-const { protect } = require("../middleware/auth");
+const { protect } = require('../middleware/auth');
 
-router.route("/").get(protect, getUserHomeworks).post(protect, createHomework);
+router.route('/').get(protect, getUserHomeworks).post(protect, createHomework);
 router
-  .route("/:id")
+  .route('/:id')
   .put(protect, updateHomework)
   .delete(protect, deleteHomework);
 // .get(getUserHomeworks)
 
 // router.route("/loadoupdatework").post(protect, updateDailyHomework);
-router.route("/loadoupdatework").get(updateDailyHomework);
+router.route('/loadoupdatework').get(updateDailyHomework);
+router.route('/loadoupdatepersonal').post(protect, updatePersonalHomework);
 
 module.exports = router;

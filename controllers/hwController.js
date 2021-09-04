@@ -1,8 +1,8 @@
-const UserLoado = require("../models/UserLoado");
-const ErrorResponse = require("../utils/errorResponse");
-const asyncHandler = require("../middleware/async");
-var moment = require("moment");
-require("moment-timezone");
+const UserLoado = require('../models/UserLoado');
+const ErrorResponse = require('../utils/errorResponse');
+const asyncHandler = require('../middleware/async');
+var moment = require('moment');
+require('moment-timezone');
 
 //flymogi.tistory.com/30 [하늘을 난 모기]
 
@@ -38,8 +38,8 @@ exports.getUserHomeworks = asyncHandler(async (req, res, next) => {
   const userHomeworks = await UserLoado.find({ user: req.user._id })
     .skip(startIndex)
     .limit(limit)
-    .sort("idx")
-    .populate("user");
+    .sort('idx')
+    .populate('user');
   if (userHomeworks.length === 0) {
     return res.status(200).json({
       success: true,
@@ -204,9 +204,9 @@ exports.updateHomework = asyncHandler(async (req, res, next) => {
 });
 
 exports.updateDailyHomework = asyncHandler(async (req, res, next) => {
-  moment.tz.setDefault("Asia/Seoul");
+  moment.tz.setDefault('Asia/Seoul');
   let m_date = moment();
-  let date = m_date.format("YYYY-MM-DD HH:mm:ss dddd");
+  let date = m_date.format('YYYY-MM-DD HH:mm:ss dddd');
   const what_day = m_date.day();
   const what_hour = m_date.hours();
   const what_minute = m_date.minutes();
@@ -287,6 +287,19 @@ const asyncUpdate = async (req_day, hwList) => {
     });
   });
 };
+
+exports.updatePersonalHomework = asyncHandler(async (req, res, next) => {
+  let userHomework = await UserLoado.find({ user: req.user._id });
+  moment.tz.setDefault('Asia/Seoul');
+  let m_date = moment();
+  let date = m_date.format('YYYY-MM-DD HH:mm:ss dddd');
+  const what_day = m_date.day();
+  const what_hour = m_date.hours();
+  const what_minute = m_date.minutes();
+  await asyncUpdate(what_day, userHomework);
+
+  res.status(200).json({ success: true });
+});
 
 // @desc        Delete a homework
 // @route       Delete /loado/api/homeworks/:homeworkId
