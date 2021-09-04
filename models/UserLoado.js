@@ -111,6 +111,10 @@ const UserLoadoSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  note:{
+    type: String,
+    maxLength: 30
+  }
 });
 
 module.exports = mongoose.model("UserLoado", UserLoadoSchema);
