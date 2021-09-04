@@ -1,20 +1,20 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const UserLoadoSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   character: {
     type: String,
-    required: [true, "Character required"],
+    required: [true, 'Character required'],
   },
   characterName: {
     type: String,
-    required: [true, "Character name required"],
+    required: [true, 'Character name required'],
     trim: true,
-    maxLength: [12, "Character name cannot be longer than 12 characters"],
+    maxLength: [12, 'Character name cannot be longer than 12 characters'],
   },
   date: {
     type: Date,
@@ -73,7 +73,7 @@ const UserLoadoSchema = new mongoose.Schema({
   },
   rehearsalAndDejavu: {
     type: [String],
-    enum: ["kukuseitn", "abrel"],
+    enum: ['kukuseitn', 'abrel'],
   },
   argos: {
     type: Boolean,
@@ -113,8 +113,8 @@ const UserLoadoSchema = new mongoose.Schema({
   },
   note: {
     type: String,
-    maxLength: 20
-  }
+    maxLength: 20,
+  },
 });
 
-module.exports = mongoose.model("UserLoado", UserLoadoSchema);
+module.exports = mongoose.model('UserLoado', UserLoadoSchema);
