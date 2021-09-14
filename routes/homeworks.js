@@ -7,6 +7,7 @@ const {
   getUserHomeworks,
   updateDailyHomework,
   updatePersonalHomework,
+  getAllUserHomeworks,
 } = require('../controllers/hwController');
 
 const router = express.Router();
@@ -19,6 +20,8 @@ router
   .put(protect, updateHomework)
   .delete(protect, deleteHomework);
 // .get(getUserHomeworks)
+
+router.route('/getAllHomework').get(protect, getAllUserHomeworks);
 
 // router.route("/loadoupdatework").post(protect, updateDailyHomework);
 router.route('/loadoupdatework').get(updateDailyHomework);

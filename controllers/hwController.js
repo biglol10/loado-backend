@@ -20,6 +20,16 @@ exports.getHomeworks = asyncHandler(async (req, res, next) => {
   });
 });
 
+exports.getAllUserHomeworks = asyncHandler(async (req, res, next) => {
+  const allUserHomeworks = await UserLoado.find({ user: req.user._id });
+
+  res.status(200).json({
+    success: true,
+    dataLength: allUserHomeworks.length,
+    data: allUserHomeworks,
+  });
+});
+
 // @desc        Get all homeworks
 // @route       GET /loado/api/homeworks/:id
 // @access      Private
