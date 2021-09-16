@@ -25,6 +25,15 @@ const UserSchema = new mongoose.Schema({
   },
   lastLogin: {
     type: String,
+    required: [true, "날짜를 입력해주세요"],
+  },
+  role: {
+    type: String,
+    default: "user",
+  },
+  newNotice: {
+    type: Boolean,
+    default: false,
   },
 });
 

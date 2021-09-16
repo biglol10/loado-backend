@@ -12,14 +12,15 @@ exports.register = asyncHandler(async (req, res, next) => {
   require("moment-timezone");
   moment.tz.setDefault("Asia/Seoul");
   let m_date = moment();
-  let date = m_date.format("YYYY-MM-DD HH:mm:ss");
+  let lastLogin = m_date.format("YYYY-MM-DD HH:mm:ss");
 
   // Create user
+  // name: name, userId: userId ... the keys should match with the model
   const user = await User.create({
     name,
     userId,
     password,
-    date,
+    lastLogin,
   });
 
   //   // Create Token
@@ -68,6 +69,30 @@ exports.login = asyncHandler(async (req, res, next) => {
   //   res.status(200).json({ success: true, token });
 
   sendTokenResponse(user, 200, res);
+});
+
+// @desc        Check if there is new notification
+// @route       POST /api/v1/auth/newNotification
+// @access      Private
+exports.checkNotification = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  res.status(200).json({
+    success: true,
+    newNotice: user.newNotice,
+  });
+});
+
+// @desc        Change the notification to false
+// @route       POST /api/v1/auth/changeNotification
+// @access      Private
+exports.changeNotification = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  user.newNotice = false;
+  await user.save();
+  res.status(200).json({
+    success: true,
+  });
 });
 
 // Get token from model, create cookie and send response
