@@ -21,3 +21,19 @@ exports.updateLoginDate = asyncHandler(async (req, res, next) => {
     data: users,
   });
 });
+
+// @desc        Change all users' notification to true
+// @route       POST /api/v1/auth/changeAllPeopleNotification
+// @access      Private
+exports.changeAllPeopleNotification = asyncHandler(async (req, res, next) => {
+  const users = await User.find();
+
+  users.map((user) => {
+    user.newNotice = true;
+    user.save();
+  });
+
+  res.status(200).json({
+    success: true,
+  });
+});

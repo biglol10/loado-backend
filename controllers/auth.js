@@ -95,6 +95,18 @@ exports.changeNotification = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @desc        Change all users' notification to true
+// @route       POST /api/v1/auth/changeAllPeopleNotification
+// @access      Private
+exports.changeAllPeopleNotification = asyncHandler(async (req, res, next) => {
+  const users = await User.find();
+  console.log(users[0]);
+  console.log(users.length);
+  res.status(200).json({
+    success: true,
+  });
+});
+
 // Get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
