@@ -8,6 +8,7 @@ const {
   updateDailyHomework,
   updatePersonalHomework,
   getAllUserHomeworks,
+  cronTest,
 } = require('../controllers/hwController');
 
 const router = express.Router();
@@ -26,5 +27,8 @@ router.route('/getAllHomework').get(protect, getAllUserHomeworks);
 // router.route("/loadoupdatework").post(protect, updateDailyHomework);
 router.route('/loadoupdatework').get(updateDailyHomework);
 router.route('/loadoupdatepersonal').post(protect, updatePersonalHomework);
+
+// node-cron test
+router.route('/crontest').get(cronTest);
 
 module.exports = router;
