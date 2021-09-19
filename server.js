@@ -69,7 +69,7 @@ process.on('unhandledRejection', (err, promise) => {
 
 cron.schedule('* * * * *', () => {
   axios
-    .get(process.env.BACKEND_URL3 + '/loado/api/homeworks/crontest')
+    .get(process.env.BACKEND_URL2 + '/loado/api/homeworks/crontest')
     .then((response) => console.log('biglolbiglol ', response.data))
     .catch((err) => console.log(err));
 });
