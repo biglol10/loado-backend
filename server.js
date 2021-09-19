@@ -67,7 +67,7 @@ process.on('unhandledRejection', (err, promise) => {
   server.close(() => process.exit(1));
 });
 
-cron.schedule('0 6 1-31 * *', () => {
+cron.schedule('* * * * *', () => {
   axios
     .get(process.env.BACKEND_URL + '/loado/api/homeworks/crontest')
     .then((response) => console.log('biglolbiglol ', response.data))
