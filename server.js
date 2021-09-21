@@ -75,7 +75,10 @@ process.on('unhandledRejection', (err, promise) => {
 // });
 
 cron.schedule('* * * * *', () => {
-  console.log('currentDate is ', new Date())
+  axios
+    .get(process.env.BACKEND_URL + '/loado/api/homeworks/crontest')
+    .then((response) => console.log('biglolbiglol ', response.data))
+    .catch((err) => console.log(err));
 });
 
 module.exports = app;
