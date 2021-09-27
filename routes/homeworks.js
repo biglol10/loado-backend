@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const {
   getHomeworks,
   createHomework,
@@ -9,26 +9,26 @@ const {
   updatePersonalHomework,
   getAllUserHomeworks,
   cronTest,
-} = require('../controllers/hwController');
+} = require("../controllers/hwController");
 
 const router = express.Router();
 
-const { protect } = require('../middleware/auth');
+const { protect } = require("../middleware/auth");
 
-router.route('/').get(protect, getUserHomeworks).post(protect, createHomework);
+router.route("/").get(protect, getUserHomeworks).post(protect, createHomework);
 router
-  .route('/:id')
+  .route("/:id")
   .put(protect, updateHomework)
   .delete(protect, deleteHomework);
 // .get(getUserHomeworks)
 
-router.route('/getAllHomework').get(protect, getAllUserHomeworks);
+router.route("/getAllHomework").get(protect, getAllUserHomeworks);
 
 // router.route("/loadoupdatework").post(protect, updateDailyHomework);
-router.route('/loadoupdatework').get(updateDailyHomework);
-router.route('/loadoupdatepersonal').post(protect, updatePersonalHomework);
+router.route("/loadoupdatework").get(updateDailyHomework);
+router.route("/loadoupdatepersonal").post(protect, updatePersonalHomework);
 
 // node-cron test
-router.route('/crontest').get(cronTest);
+router.route("/crontest").get(cronTest);
 
 module.exports = router;
