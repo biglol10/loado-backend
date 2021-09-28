@@ -99,9 +99,7 @@ exports.createHomework = asyncHandler(async (req, res, next) => {
     req.body.abyssDungeonWeekly = false;
     req.body.rehearsalAndDejavu = [];
   } else {
-    console.log("asdfasdfsadf");
     const nextIdx = (await changeHWIdx(req.user._id)) + 1;
-    console.log("nextIdx is > ", nextIdx);
     // let nextIdx =
     //   Math.max.apply(
     //     Math,
@@ -339,7 +337,7 @@ exports.deleteHomework = asyncHandler(async (req, res, next) => {
 
   await homework.remove();
 
-  const totalLength = changeHWIdx(req.user.id);
+  const totalLength = await changeHWIdx(req.user._id);
 
   res.status(200).json({ success: true, totalLength });
 });
