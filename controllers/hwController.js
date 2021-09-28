@@ -1,6 +1,7 @@
 const UserLoado = require("../models/UserLoado");
 const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
+const changeHWIdx = require("../utils/changeHWIdx");
 var moment = require("moment");
 require("moment-timezone");
 
@@ -98,13 +99,17 @@ exports.createHomework = asyncHandler(async (req, res, next) => {
     req.body.abyssDungeonWeekly = false;
     req.body.rehearsalAndDejavu = [];
   } else {
-    let nextIdx =
-      Math.max.apply(
-        Math,
-        userHomeworks.map(function (anObject) {
-          return anObject.idx;
-        })
-      ) + 1;
+    console.log("asdfasdfsadf");
+    const nextIdx = (await changeHWIdx(req.user._id)) + 1;
+    console.log("nextIdx is > ", nextIdx);
+    // let nextIdx =
+    //   Math.max.apply(
+    //     Math,
+    //     userHomeworks.map(function (anObject) {
+    //       return anObject.idx;
+    //     })
+    //   ) + 1;
+
     req.body.idx = nextIdx;
     req.body.abyssDungeonWeekly = userHomeworks[0].abyssDungeonWeekly;
     req.body.rehearsalAndDejavu = userHomeworks[0].rehearsalAndDejavu;
@@ -334,9 +339,9 @@ exports.deleteHomework = asyncHandler(async (req, res, next) => {
 
   await homework.remove();
 
-  const userHomework = await UserLoado.find({ user: req.user.id });
+  const totalLength = changeHWIdx(req.user.id);
 
-  res.status(200).json({ success: true, totalLength: userHomework.length });
+  res.status(200).json({ success: true, totalLength });
 });
 
 exports.cronTest = asyncHandler(async (req, res, next) => {
