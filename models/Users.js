@@ -35,6 +35,10 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  viewByCheckBox: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // Encrypt password using bcrypt (acts like middleware before saving user)

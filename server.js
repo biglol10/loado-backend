@@ -23,6 +23,7 @@ connectDB();
 const homeworks = require("./routes/homeworks");
 const usersRoute = require("./routes/users");
 const adminFeatures = require("./routes/adminFeatures");
+const userConfigure = require("./routes/userConfigure");
 
 const app = express();
 
@@ -43,6 +44,7 @@ if (process.env.NODE_ENV === "development") {
 app.use("/loado/api/homeworks", homeworks);
 app.use("/loado/api/users", usersRoute);
 app.use("/loado/api/adminFeatures", adminFeatures);
+app.use("/loado/api/userConfigure", userConfigure);
 
 // this should be below the routes or it will cause error
 app.use(express.static(path.join(__dirname, "build")));
