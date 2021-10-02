@@ -5,6 +5,7 @@ const changeHWIdx = require('../utils/changeHWIdx');
 const cheerio = require('cheerio');
 const request = require('request');
 var moment = require('moment');
+const axios = require('axios');
 require('moment-timezone');
 
 //flymogi.tistory.com/30 [하늘을 난 모기]
@@ -82,21 +83,21 @@ exports.getUserHomeworks = asyncHandler(async (req, res, next) => {
 });
 
 exports.getUserItemLevel = asyncHandler(async (req, res, next) => {
-  const stringUrl = 'http://lostark.game.onstove.com/Profile/Character/샙트';
-  console.log('came to here1');
-  request(stringUrl, function (error, response, body) {
-    console.log('came to here2');
-    var $ = cheerio.load(body);
+  const stringUrl =
+    'https://lostark.game.onstove.com/Profile/Character/%EC%83%99%ED%8A%B8';
 
-    // 여기서 제이쿼리 셀렉터를 이용하여 원하는 정보를 가져올 수 있다.
-
-    res.status(200).json({
-      success: true,
-      data: body,
+  await axios
+    .get(stringUrl)
+    .then((response) => {
+      console.log('success');
+      res.status(200).json({ success: true, data: response });
+    })
+    .catch((err) => {
+      console.log('fail');
+      res.status(404).json({ success: false, data: err });
     });
 
-    // console.log($('.level-info2__expedition').text());
-  });
+  // console.log($('.level-info2__expedition').text());
 });
 
 // @desc        Create new homework
