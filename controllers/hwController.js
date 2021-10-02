@@ -86,16 +86,18 @@ exports.getUserItemLevel = asyncHandler(async (req, res, next) => {
   const stringUrl =
     'https://lostark.game.onstove.com/Profile/Character/%EC%83%99%ED%8A%B8';
 
-  await axios
+  const result = await axios
     .get(stringUrl)
     .then((response) => {
       console.log('success');
-      return res.status(200).json({ success: true, data: response });
+      return response;
     })
     .catch((err) => {
       console.log('fail');
-      return res.status(404).json({ success: false, data: err });
+      return err;
     });
+
+  res.status(200).json({ succees: true, data: result });
 
   // console.log($('.level-info2__expedition').text());
 });
