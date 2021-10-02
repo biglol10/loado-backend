@@ -90,11 +90,11 @@ exports.getUserItemLevel = asyncHandler(async (req, res, next) => {
     .get(stringUrl)
     .then((response) => {
       console.log('success');
-      return response;
+      return JSON.stringify(response);
     })
     .catch((err) => {
       console.log('fail');
-      return err;
+      return JSON.stringify(err);
     });
 
   res.status(200).json({ succees: true, data: result });
