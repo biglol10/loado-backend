@@ -1,11 +1,9 @@
 const UserLoado = require('../models/UserLoado');
+const LoadoLogs = require('../models/LoadoLogs');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const changeHWIdx = require('../utils/changeHWIdx');
-const cheerio = require('cheerio');
-const request = require('request');
 var moment = require('moment');
-const axios = require('axios');
 require('moment-timezone');
 
 //flymogi.tistory.com/30 [하늘을 난 모기]
@@ -82,26 +80,6 @@ exports.getUserHomeworks = asyncHandler(async (req, res, next) => {
   //   next(err); // not needed because of asyncHandler
 });
 
-exports.getUserItemLevel = asyncHandler(async (req, res, next) => {
-  const stringUrl =
-    'https://lostark.game.onstove.com/Profile/Character/%EC%83%99%ED%8A%B8';
-
-  const result = await axios
-    .get(stringUrl)
-    .then((response) => {
-      console.log('success');
-      return JSON.stringify(response);
-    })
-    .catch((err) => {
-      console.log('fail');
-      return JSON.stringify(err);
-    });
-
-  res.status(200).json({ succees: true, data: result });
-
-  // console.log($('.level-info2__expedition').text());
-});
-
 // @desc        Create new homework
 // @route       POST /loado/api/homeworks
 // @access      Private
@@ -138,6 +116,12 @@ exports.createHomework = asyncHandler(async (req, res, next) => {
   req.body.user = req.user._id;
   const userLoado = await UserLoado.create(req.body);
 
+  await LoadoLogs.create({
+    user: req.user._id,
+    activity: 'createHomework',
+    stringParam: JSON.stringify(req.body),
+  });
+
   res.status(201).json({
     success: true,
     data: userLoado,
@@ -152,6 +136,12 @@ exports.updateHomework = asyncHandler(async (req, res, next) => {
   let userHomework = await UserLoado.findById(req.body.data._id);
 
   const bodyData = { ...req.body.data };
+
+  await LoadoLogs.create({
+    user: req.user._id,
+    activity: 'updateHomework',
+    stringParam: JSON.stringify(bodyData),
+  });
 
   if (!userHomework) {
     return next(new ErrorResponse(`해당 레코드가 존재하지 않습니다`, 404));
@@ -247,6 +237,10 @@ exports.updateDailyHomework = asyncHandler(async (req, res, next) => {
     return;
   }
 
+  await LoadoLogs.create({
+    activity: 'updateDailyHomework',
+  });
+
   moment.tz.setDefault('Asia/Seoul');
   let m_date = moment();
   let date = m_date.format('YYYY-MM-DD HH:mm:ss dddd');
@@ -332,6 +326,10 @@ const asyncUpdate = async (req_day, hwList) => {
 };
 
 exports.updatePersonalHomework = asyncHandler(async (req, res, next) => {
+  await LoadoLogs.create({
+    activity: 'updatePersonalHomework',
+    user: req.user._id,
+  });
   let userHomework = await UserLoado.find({ user: req.user._id });
   moment.tz.setDefault('Asia/Seoul');
   let m_date = moment();
@@ -357,6 +355,12 @@ exports.deleteHomework = asyncHandler(async (req, res, next) => {
   if (homework.user.toString() !== req.user.id) {
     return next(new ErrorResponse(`수정하기에 올바른 사용자가 아닙니다`, 401));
   }
+
+  await LoadoLogs.create({
+    activity: 'deleteHomework',
+    user: req.user._id,
+    stringParam: req.params.id,
+  });
 
   await homework.remove();
 

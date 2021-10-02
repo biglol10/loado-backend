@@ -9,7 +9,6 @@ const {
   updatePersonalHomework,
   getAllUserHomeworks,
   cronTest,
-  getUserItemLevel,
 } = require('../controllers/hwController');
 
 const router = express.Router();
@@ -28,9 +27,6 @@ router.route('/getAllHomework').get(protect, getAllUserHomeworks);
 // router.route("/loadoupdatework").post(protect, updateDailyHomework);
 router.route('/loadoupdatework').get(updateDailyHomework);
 router.route('/loadoupdatepersonal').post(protect, updatePersonalHomework);
-
-// get item level
-router.route('/getUserItemLevel').get(protect, getUserItemLevel);
 
 // node-cron test
 router.route('/crontest').get(cronTest);
