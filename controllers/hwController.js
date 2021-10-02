@@ -1,9 +1,11 @@
-const UserLoado = require("../models/UserLoado");
-const ErrorResponse = require("../utils/errorResponse");
-const asyncHandler = require("../middleware/async");
-const changeHWIdx = require("../utils/changeHWIdx");
-var moment = require("moment");
-require("moment-timezone");
+const UserLoado = require('../models/UserLoado');
+const ErrorResponse = require('../utils/errorResponse');
+const asyncHandler = require('../middleware/async');
+const changeHWIdx = require('../utils/changeHWIdx');
+const cheerio = require('cheerio');
+const request = require('request');
+var moment = require('moment');
+require('moment-timezone');
 
 //flymogi.tistory.com/30 [하늘을 난 모기]
 
@@ -11,7 +13,7 @@ require("moment-timezone");
 // @route       GET /loado/api/homeworks
 // @access      Private
 exports.getHomeworks = asyncHandler(async (req, res, next) => {
-  const userHomeworks = await UserLoado.find().sort("idx");
+  const userHomeworks = await UserLoado.find().sort('idx');
   //   const result = userHomeworks.skip(skip).limit(limit);
 
   res.status(200).json({
@@ -23,7 +25,7 @@ exports.getHomeworks = asyncHandler(async (req, res, next) => {
 
 exports.getAllUserHomeworks = asyncHandler(async (req, res, next) => {
   const allUserHomeworks = await UserLoado.find({ user: req.user._id }).sort(
-    "idx"
+    'idx'
   );
 
   res.status(200).json({
@@ -51,8 +53,8 @@ exports.getUserHomeworks = asyncHandler(async (req, res, next) => {
   const userHomeworks = await UserLoado.find({ user: req.user._id })
     .skip(startIndex)
     .limit(limit)
-    .sort("idx")
-    .populate("user");
+    .sort('idx')
+    .populate('user');
   if (userHomeworks.length === 0) {
     return res.status(200).json({
       success: true,
@@ -77,6 +79,22 @@ exports.getUserHomeworks = asyncHandler(async (req, res, next) => {
   // );
 
   //   next(err); // not needed because of asyncHandler
+});
+
+exports.getUserItemLevel = asyncHandler(async (req, res, next) => {
+  const stringUrl = 'http://lostark.game.onstove.com/Profile/Character/샙트';
+  request(stringUrl, function (error, response, body) {
+    var $ = cheerio.load(body);
+
+    // 여기서 제이쿼리 셀렉터를 이용하여 원하는 정보를 가져올 수 있다.
+
+    res.status(200).json({
+      success: true,
+      data: body,
+    });
+
+    // console.log($('.level-info2__expedition').text());
+  });
 });
 
 // @desc        Create new homework
@@ -224,9 +242,9 @@ exports.updateDailyHomework = asyncHandler(async (req, res, next) => {
     return;
   }
 
-  moment.tz.setDefault("Asia/Seoul");
+  moment.tz.setDefault('Asia/Seoul');
   let m_date = moment();
-  let date = m_date.format("YYYY-MM-DD HH:mm:ss dddd");
+  let date = m_date.format('YYYY-MM-DD HH:mm:ss dddd');
   const what_day = m_date.day();
   const what_hour = m_date.hours();
   const what_minute = m_date.minutes();
@@ -310,9 +328,9 @@ const asyncUpdate = async (req_day, hwList) => {
 
 exports.updatePersonalHomework = asyncHandler(async (req, res, next) => {
   let userHomework = await UserLoado.find({ user: req.user._id });
-  moment.tz.setDefault("Asia/Seoul");
+  moment.tz.setDefault('Asia/Seoul');
   let m_date = moment();
-  let date = m_date.format("YYYY-MM-DD HH:mm:ss dddd");
+  let date = m_date.format('YYYY-MM-DD HH:mm:ss dddd');
   const what_day = m_date.day();
   const what_hour = m_date.hours();
   const what_minute = m_date.minutes();
