@@ -83,7 +83,9 @@ exports.getUserHomeworks = asyncHandler(async (req, res, next) => {
 
 exports.getUserItemLevel = asyncHandler(async (req, res, next) => {
   const stringUrl = 'http://lostark.game.onstove.com/Profile/Character/샙트';
+  console.log('came to here1');
   request(stringUrl, function (error, response, body) {
+    console.log('came to here2');
     var $ = cheerio.load(body);
 
     // 여기서 제이쿼리 셀렉터를 이용하여 원하는 정보를 가져올 수 있다.
