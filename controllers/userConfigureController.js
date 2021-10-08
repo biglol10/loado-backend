@@ -1,6 +1,7 @@
-const User = require("../models/Users");
-const ErrorResponse = require("../utils/errorResponse");
-const asyncHandler = require("../middleware/async");
+const User = require('../models/Users');
+const ErrorResponse = require('../utils/errorResponse');
+const asyncHandler = require('../middleware/async');
+const LoadoLogs = require('../models/LoadoLogs');
 
 // @desc        Get user's view_by_checkbox configuration
 // @route       Get /API/v1/userConfigure/viewbycheckbox
@@ -8,7 +9,7 @@ const asyncHandler = require("../middleware/async");
 exports.getUserCheckBoxConfiguration = asyncHandler(async (req, res, next) => {
   let user = await User.findById(req.user._id);
   if (!user) {
-    return next(new ErrorResponse("No user with this id", 404));
+    return next(new ErrorResponse('No user with this id', 404));
   }
   res.status(200).json({
     success: true,
@@ -23,7 +24,7 @@ exports.changeUserCheckBoxConfiguration = asyncHandler(
   async (req, res, next) => {
     let user = await User.findById(req.user._id);
     if (!user) {
-      return next(new ErrorResponse("No user with this id", 404));
+      return next(new ErrorResponse('No user with this id', 404));
     }
     user = await User.findByIdAndUpdate(req.user._id, req.body);
     res.status(200).json({
@@ -35,14 +36,21 @@ exports.changeUserCheckBoxConfiguration = asyncHandler(
 // @desc        Upload Profile Pic
 // @route       POST /API/v1/userConfigure/uploadProfilePic
 // @access      Private
-exports.uploadProfilePic = asyncHandler(async (req,res,next)=>{
-  
+exports.uploadProfilePic = asyncHandler(async (req, res, next) => {
   let user = await User.findById(req.user._id);
-  if(!user){
-    return next(new ErrorResponse("No user with this id", 404));
+  if (!user) {
+    return next(new ErrorResponse('No user with this id', 404));
   }
+
   user = await User.findByIdAndUpdate(req.user._id, req.body);
+
+  await LoadoLogs.create({
+    user: req.user._id,
+    activity: 'updateProfile',
+    stringParam: req.body.profilePic,
+  });
+
   res.status(200).json({
-    success: true
-  })
-})
+    success: true,
+  });
+});
