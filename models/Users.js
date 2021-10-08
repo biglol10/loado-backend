@@ -39,6 +39,9 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  profilePic: {
+    type: String
+  }
 });
 
 // Encrypt password using bcrypt (acts like middleware before saving user)
