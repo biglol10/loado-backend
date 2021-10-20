@@ -1,9 +1,9 @@
-const User = require('../models/Users');
-const UserLoado = require('../models/UserLoado');
-const LoadoLogs = require('../models/LoadoLogs');
-const ErrorResponse = require('../utils/errorResponse');
-const asyncHandler = require('../middleware/async');
-var moment = require('moment');
+const User = require("../models/Users");
+const UserLoado = require("../models/UserLoado");
+const LoadoLogs = require("../models/LoadoLogs");
+const ErrorResponse = require("../utils/errorResponse");
+const asyncHandler = require("../middleware/async");
+var moment = require("moment");
 
 // ************ Admin functionality ************
 
@@ -13,7 +13,7 @@ var moment = require('moment');
 exports.updateLoginDate = asyncHandler(async (req, res, next) => {
   const users = await User.find({ lastLogin: { $eq: null } });
   users.map((user, idx) => {
-    user.lastLogin = '2021-09-14 00:00:00';
+    user.lastLogin = "2021-09-14 00:00:00";
     user.save();
   });
   res.status(200).json({
@@ -52,22 +52,22 @@ exports.getDailyLogCounts = asyncHandler(async (req, res, next) => {
   for (let index = 0; index < 7; index++) {
     const startDate =
       moment()
-        .add((index + 1) * -1, 'days')
-        .format('YYYY-MM-DD') + ' 15:00:00';
+        .add((index + 1) * -1, "days")
+        .format("YYYY-MM-DD") + " 15:00:00";
     const endDate =
       moment()
-        .add(index * -1, 'days')
-        .format('YYYY-MM-DD') + ' 15:00:00';
+        .add(index * -1, "days")
+        .format("YYYY-MM-DD") + " 15:00:00";
     const dateValue = moment()
-      .add((index + 1) * -1, 'days')
-      .add(9, 'hours')
-      .format('YYYY-MM-DD');
+      .add((index + 1) * -1, "days")
+      .add(9, "hours")
+      .format("YYYY-MM-DD");
 
     const logsCount = await LoadoLogs.find()
-      .where('createdDttm')
+      .where("createdDttm")
       .gt(startDate)
       .lt(endDate)
-      .select('-stringParam')
+      .select("-stringParam")
       .countDocuments();
 
     logArray.push({
@@ -76,15 +76,49 @@ exports.getDailyLogCounts = asyncHandler(async (req, res, next) => {
     });
   }
 
-  const userLoginCount = await User.find()
-    .where('lastLogin')
-    .gt(moment().add(-1, 'days').format('YYYY-MM-DD') + ' 15:00:00')
-    .lt(moment().add(0, 'days').format('YYYY-MM-DD') + ' 15:00:00')
-    .countDocuments();
+  const userCount = await User.find().countDocuments();
+  const hwCount = await UserLoado.find().countDocuments();
+  const logsCount = await LoadoLogs.find().countDocuments();
 
-  res.status(200).json({
-    success: true,
-    log: logArray,
-    userLoginCount,
-  });
+  let groupFailSuccess = false;
+  let jobGroupingResult;
+
+  // 케릭터 별 그룹핑 카운트
+  await UserLoado.aggregate(
+    [
+      {
+        $group: {
+          _id: "$character",
+          characterCount: {
+            $sum: 1,
+          },
+        },
+      },
+    ],
+    function (err, result) {
+      if (err) {
+        groupFailSuccess = false;
+        res.status(200).json({
+          success: true,
+          groupFailSuccess,
+          log: logArray,
+          userCount,
+          hwCount,
+          logsCount,
+        });
+      } else {
+        groupFailSuccess = true;
+        jobGroupingResult = result;
+        res.status(200).json({
+          success: true,
+          groupFailSuccess,
+          log: logArray,
+          userCount,
+          hwCount,
+          logsCount,
+          jobGroupingResult,
+        });
+      }
+    }
+  );
 });
