@@ -3,6 +3,7 @@ const {
   updateLoginDate,
   changeAllPeopleNotification,
   getDailyLogCounts,
+  deleteLoadoLogs,
 } = require('../controllers/adminController');
 
 const router = express.Router();
@@ -13,6 +14,9 @@ router.route('/updateLoginDate').post(protectAdmin, updateLoginDate);
 router
   .route('/changeAllPeopleNotification')
   .put(protectAdmin, changeAllPeopleNotification);
-router.route('/adminData/dailyLogsData').get(protectAdmin, getDailyLogCounts);
+router
+  .route('/adminData/dailyLogsData')
+  .get(protectAdmin, getDailyLogCounts)
+  .delete(deleteLoadoLogs);
 
 module.exports = router;

@@ -82,6 +82,19 @@ cron.schedule('0 21 1-31 * *', () => {
     .catch((err) => console.log('update failed', err, new Date()));
 });
 
+cron.schedule('0 15 1-31 * *', () => {
+  if (process.env.BACKEND_URL.indexOf('localhost') > 0) return;
+  axios
+    .delete(
+      process.env.BACKEND_URL +
+        `/loado/api/adminFeatures/adminData/dailyLogsData?key=${process.env.UPDATE_KEY}`
+    )
+    .then((response) =>
+      console.log('biglolbiglol, old logs delete success ', new Date())
+    )
+    .catch((err) => console.log('log delete failed', err, new Date()));
+});
+
 // cron.schedule('* * * * *', () => {
 //   axios
 //     .get(process.env.BACKEND_URL + '/loado/api/homeworks/crontest')
