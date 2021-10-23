@@ -134,8 +134,8 @@ exports.deleteLoadoLogs = asyncHandler(async (req, res, next) => {
 
   const week = moment().add(-7, 'days').format('YYYY-MM-DD') + ' 15:00:00';
 
-  const logsCount = await LoadoLogs.remove({
-    date: {
+  const logsCount = await LoadoLogs.deleteMany({
+    createdDttm: {
       $lt: week,
     },
   });
