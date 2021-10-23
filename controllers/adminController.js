@@ -62,6 +62,9 @@ exports.getDailyLogCounts = asyncHandler(async (req, res, next) => {
       .add((index + 1) * -1, 'days')
       .add(9, 'hours')
       .format('YYYY-MM-DD');
+    console.log(
+      `startDate is ${startDate}, endDate is ${endDate}, dateValue is ${dateValue}`
+    );
 
     const logsCount = await LoadoLogs.find()
       .where('createdDttm')
