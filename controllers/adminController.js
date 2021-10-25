@@ -1,9 +1,9 @@
-const User = require('../models/Users');
-const UserLoado = require('../models/UserLoado');
-const LoadoLogs = require('../models/LoadoLogs');
-const ErrorResponse = require('../utils/errorResponse');
-const asyncHandler = require('../middleware/async');
-var moment = require('moment');
+const User = require("../models/Users");
+const UserLoado = require("../models/UserLoado");
+const LoadoLogs = require("../models/LoadoLogs");
+const ErrorResponse = require("../utils/errorResponse");
+const asyncHandler = require("../middleware/async");
+var moment = require("moment");
 
 // ************ Admin functionality ************
 
@@ -13,7 +13,7 @@ var moment = require('moment');
 exports.updateLoginDate = asyncHandler(async (req, res, next) => {
   const users = await User.find({ lastLogin: { $eq: null } });
   users.map((user, idx) => {
-    user.lastLogin = '2021-09-14 00:00:00';
+    user.lastLogin = "2021-09-14 00:00:00";
     user.save();
   });
   res.status(200).json({
@@ -52,25 +52,25 @@ exports.getDailyLogCounts = asyncHandler(async (req, res, next) => {
   for (let index = 0; index < 7; index++) {
     const startDate =
       moment()
-        .add((index + 1) * -1, 'days')
-        .format('YYYY-MM-DD') + ' 15:00:00';
+        .add((index + 1) * -1, "days")
+        .format("YYYY-MM-DD") + " 15:00:00";
     const endDate =
       moment()
-        .add(index * -1, 'days')
-        .format('YYYY-MM-DD') + ' 15:00:00';
+        .add(index * -1, "days")
+        .format("YYYY-MM-DD") + " 15:00:00";
     const dateValue = moment()
-      .add((index + 1) * -1, 'days')
-      .add(9, 'hours')
-      .format('YYYY-MM-DD');
+      .add(index * -1, "days")
+      .add(9, "hours")
+      .format("YYYY-MM-DD");
     console.log(
       `startDate is ${startDate}, endDate is ${endDate}, dateValue is ${dateValue}`
     );
 
     const logsCount = await LoadoLogs.find()
-      .where('createdDttm')
+      .where("createdDttm")
       .gt(startDate)
       .lt(endDate)
-      .select('-stringParam')
+      .select("-stringParam")
       .countDocuments();
 
     logArray.push({
@@ -91,7 +91,7 @@ exports.getDailyLogCounts = asyncHandler(async (req, res, next) => {
     [
       {
         $group: {
-          _id: '$character',
+          _id: "$character",
           characterCount: {
             $sum: 1,
           },
@@ -135,7 +135,7 @@ exports.deleteLoadoLogs = asyncHandler(async (req, res, next) => {
     return;
   }
 
-  const week = moment().add(-7, 'days').format('YYYY-MM-DD') + ' 15:00:00';
+  const week = moment().add(-7, "days").format("YYYY-MM-DD") + " 15:00:00";
 
   const logsCount = await LoadoLogs.deleteMany({
     createdDttm: {
@@ -144,7 +144,7 @@ exports.deleteLoadoLogs = asyncHandler(async (req, res, next) => {
   });
 
   await LoadoLogs.create({
-    activity: 'deleteOldLogs',
+    activity: "deleteOldLogs",
   });
 
   res.status(200).json({
