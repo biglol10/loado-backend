@@ -63,6 +63,11 @@ exports.getDailyLogCounts = asyncHandler(async (req, res, next) => {
       .add(9, "hours")
       .format("YYYY-MM-DD");
     console.log(
+      `dateValue is ${moment()
+        .add(index * -1, "days")
+        .add(9, "hours")}`
+    );
+    console.log(
       `startDate is ${startDate}, endDate is ${endDate}, dateValue is ${dateValue}`
     );
 
