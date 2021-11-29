@@ -48,7 +48,9 @@ Date.prototype.addHours = function (h) {
 // @route       GET /api/v1/auth/getDailyLogCounts
 // @access      Private
 exports.getDailyLogCounts = asyncHandler(async (req, res, next) => {
-  console.log(`biglolbiglol ${process.env.BACKEND_URL}`);
+  let dayMinus = 9;
+  if (process.env.BACKEND_URL.indexOf("loado-app") >= 0) dayMinus = 0;
+
   const logArray = [];
   for (let index = 0; index < 7; index++) {
     const startDate =
@@ -61,7 +63,7 @@ exports.getDailyLogCounts = asyncHandler(async (req, res, next) => {
         .format("YYYY-MM-DD") + " 15:00:00";
     const dateValue = moment()
       .add(index * -1, "days")
-      .add(9, "hours")
+      .add(dayMinus, "hours")
       .format("YYYY-MM-DD");
     console.log(
       `startDate is ${startDate}, endDate is ${endDate}, dateValue is ${dateValue}`
