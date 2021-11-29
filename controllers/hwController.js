@@ -54,9 +54,6 @@ exports.getUserHomeworks = asyncHandler(async (req, res, next) => {
   // query = UserLoado.find(JSON.parse(queryStr));
   // const homeworks = await query;
 
-  moment.tz.setDefault("Asia/Seoul");
-  let m_date = moment();
-
   const page = parseInt(req.query.page, 10) || 1;
   const limit = parseInt(req.query.limit, 10) || 8;
   const startIndex = (page - 1) * limit;
@@ -102,9 +99,6 @@ exports.createHomework = asyncHandler(async (req, res, next) => {
   // console.log("req.user is ", req.user); // got from auth.js middleware protect
 
   const userHomeworks = await UserLoado.find({ user: req.user._id });
-
-  moment.tz.setDefault("Asia/Seoul");
-  let m_date = moment();
 
   if (userHomeworks.length === 24) {
     return next(

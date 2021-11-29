@@ -48,6 +48,7 @@ Date.prototype.addHours = function (h) {
 // @route       GET /api/v1/auth/getDailyLogCounts
 // @access      Private
 exports.getDailyLogCounts = asyncHandler(async (req, res, next) => {
+  console.log(`biglolbiglol ${process.env.BACKEND_URL}`);
   const logArray = [];
   for (let index = 0; index < 7; index++) {
     const startDate =
@@ -62,11 +63,6 @@ exports.getDailyLogCounts = asyncHandler(async (req, res, next) => {
       .add(index * -1, "days")
       .add(9, "hours")
       .format("YYYY-MM-DD");
-    console.log(
-      `dateValue is ${moment()
-        .add(index * -1, "days")
-        .add(9, "hours")}`
-    );
     console.log(
       `startDate is ${startDate}, endDate is ${endDate}, dateValue is ${dateValue}`
     );
