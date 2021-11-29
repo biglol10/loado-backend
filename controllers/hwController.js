@@ -1,10 +1,10 @@
-const UserLoado = require('../models/UserLoado');
-const LoadoLogs = require('../models/LoadoLogs');
-const ErrorResponse = require('../utils/errorResponse');
-const asyncHandler = require('../middleware/async');
-const changeHWIdx = require('../utils/changeHWIdx');
-var moment = require('moment');
-require('moment-timezone');
+const UserLoado = require("../models/UserLoado");
+const LoadoLogs = require("../models/LoadoLogs");
+const ErrorResponse = require("../utils/errorResponse");
+const asyncHandler = require("../middleware/async");
+const changeHWIdx = require("../utils/changeHWIdx");
+var moment = require("moment");
+require("moment-timezone");
 
 //flymogi.tistory.com/30 [하늘을 난 모기]
 
@@ -12,7 +12,7 @@ require('moment-timezone');
 // @route       GET /loado/api/homeworks
 // @access      Private
 exports.getHomeworks = asyncHandler(async (req, res, next) => {
-  const userHomeworks = await UserLoado.find().sort('idx');
+  const userHomeworks = await UserLoado.find().sort("idx");
   //   const result = userHomeworks.skip(skip).limit(limit);
 
   res.status(200).json({
@@ -24,7 +24,7 @@ exports.getHomeworks = asyncHandler(async (req, res, next) => {
 
 exports.getAllUserHomeworks = asyncHandler(async (req, res, next) => {
   const allUserHomeworks = await UserLoado.find({ user: req.user._id }).sort(
-    'idx'
+    "idx"
   );
 
   res.status(200).json({
@@ -63,8 +63,8 @@ exports.getUserHomeworks = asyncHandler(async (req, res, next) => {
   const userHomeworks = await UserLoado.find({ user: req.user._id })
     .skip(startIndex)
     .limit(limit)
-    .sort('idx')
-    .populate('user');
+    .sort("idx")
+    .populate("user");
   if (userHomeworks.length === 0) {
     return res.status(200).json({
       success: true,
@@ -129,7 +129,7 @@ exports.createHomework = asyncHandler(async (req, res, next) => {
 
   await LoadoLogs.create({
     user: req.user._id,
-    activity: 'createHomework',
+    activity: "createHomework",
     stringParam: JSON.stringify(req.body),
   });
 
@@ -150,7 +150,7 @@ exports.updateHomework = asyncHandler(async (req, res, next) => {
 
   await LoadoLogs.create({
     user: req.user._id,
-    activity: 'updateHomework',
+    activity: "updateHomework",
     stringParam: JSON.stringify(bodyData),
   });
 
@@ -248,16 +248,28 @@ exports.updateDailyHomework = asyncHandler(async (req, res, next) => {
     return;
   }
 
-  await LoadoLogs.create({
-    activity: 'updateDailyHomework',
+  var moment = require("moment");
+
+  moment.tz.setDefault("Asia/Seoul");
+
+  return res.status(403).json({
+    success: false,
+    returnStatement: "No more",
+    momentValue: moment().format(),
   });
 
-  moment.tz.setDefault('Asia/Seoul');
+  await LoadoLogs.create({
+    activity: "updateDailyHomework",
+  });
+
+  moment.tz.setDefault("Asia/Seoul");
   let m_date = moment();
-  let date = m_date.format('YYYY-MM-DD HH:mm:ss dddd');
+  let date = m_date.format("YYYY-MM-DD HH:mm:ss dddd");
   const what_day = m_date.day();
   const what_hour = m_date.hours();
   const what_minute = m_date.minutes();
+
+  return;
 
   // 매일 오전 5시 50분 부터 오전 6시 10분 사이
   if (
@@ -338,13 +350,13 @@ const asyncUpdate = async (req_day, hwList) => {
 
 exports.updatePersonalHomework = asyncHandler(async (req, res, next) => {
   await LoadoLogs.create({
-    activity: 'updatePersonalHomework',
+    activity: "updatePersonalHomework",
     user: req.user._id,
   });
   let userHomework = await UserLoado.find({ user: req.user._id });
-  moment.tz.setDefault('Asia/Seoul');
+  moment.tz.setDefault("Asia/Seoul");
   let m_date = moment();
-  let date = m_date.format('YYYY-MM-DD HH:mm:ss dddd');
+  let date = m_date.format("YYYY-MM-DD HH:mm:ss dddd");
   const what_day = m_date.day();
   const what_hour = m_date.hours();
   const what_minute = m_date.minutes();
@@ -368,7 +380,7 @@ exports.deleteHomework = asyncHandler(async (req, res, next) => {
   }
 
   await LoadoLogs.create({
-    activity: 'deleteHomework',
+    activity: "deleteHomework",
     user: req.user._id,
     stringParam: req.params.id,
   });
