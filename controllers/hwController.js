@@ -100,6 +100,8 @@ exports.createHomework = asyncHandler(async (req, res, next) => {
 
   const userHomeworks = await UserLoado.find({ user: req.user._id });
 
+  moment.tz.setDefault("Asia/Seoul");
+
   if (userHomeworks.length === 24) {
     return next(
       new ErrorResponse(`추가할 수 있는 개수는 24개로 제한되어 있습니다`, 405)
