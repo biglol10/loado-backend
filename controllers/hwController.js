@@ -248,16 +248,6 @@ exports.updateDailyHomework = asyncHandler(async (req, res, next) => {
     return;
   }
 
-  var moment = require("moment");
-
-  moment.tz.setDefault("Asia/Seoul");
-
-  return res.status(403).json({
-    success: false,
-    returnStatement: "No more",
-    momentValue: moment().format(),
-  });
-
   await LoadoLogs.create({
     activity: "updateDailyHomework",
   });
@@ -268,8 +258,6 @@ exports.updateDailyHomework = asyncHandler(async (req, res, next) => {
   const what_day = m_date.day();
   const what_hour = m_date.hours();
   const what_minute = m_date.minutes();
-
-  return;
 
   // 매일 오전 5시 50분 부터 오전 6시 10분 사이
   if (
