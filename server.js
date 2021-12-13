@@ -24,6 +24,7 @@ const homeworks = require('./routes/homeworks');
 const usersRoute = require('./routes/users');
 const adminFeatures = require('./routes/adminFeatures');
 const userConfigure = require('./routes/userConfigure');
+const itemPriceFeature = require('./routes/itemPrice');
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.use('/loado/api/homeworks', homeworks);
 app.use('/loado/api/users', usersRoute);
 app.use('/loado/api/adminFeatures', adminFeatures);
 app.use('/loado/api/userConfigure', userConfigure);
+app.use('/loado/api/itemPrice', itemPriceFeature);
 
 // this should be below the routes or it will cause error
 app.use(express.static(path.join(__dirname, 'build')));
