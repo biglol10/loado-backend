@@ -1,5 +1,5 @@
 const ItemPriceData = require('../models/ItemPrice');
-const LoadoLogs = require("../models/LoadoLogs");
+const LoadoLogs = require('../models/LoadoLogs');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 
@@ -10,18 +10,17 @@ exports.setItemPrice = asyncHandler(async (req, res, next) => {
   const dateValue = req.body.dateValue;
   const itemParam = req.body.jsonParam;
 
-  itemParam.map(item => {
+  itemParam.map((item) => {
     ItemPriceData.create({
       createdDttm: dateValue,
       itemName: item.itemName,
-      itemPrice: item.itemPrice
-    })
+      itemPrice: item.itemPrice,
+    });
   });
 
   await LoadoLogs.create({
-    user: "biglol",
-    activity: "itemPriceLogAdded",
-    stringParam: "",
+    activity: 'itemPriceLogAdded',
+    stringParam: '',
   });
 
   return res.status(200).json({
