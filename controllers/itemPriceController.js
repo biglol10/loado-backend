@@ -1,7 +1,7 @@
-const ItemPriceData = require('../models/ItemPrice');
-const LoadoLogs = require('../models/LoadoLogs');
-const ErrorResponse = require('../utils/errorResponse');
-const asyncHandler = require('../middleware/async');
+const ItemPriceData = require("../models/ItemPrice");
+const LoadoLogs = require("../models/LoadoLogs");
+const ErrorResponse = require("../utils/errorResponse");
+const asyncHandler = require("../middleware/async");
 
 // @desc        Save Item price at certain datetime
 // @route       GET /loado/api/itemPrice/setItemPrice
@@ -19,11 +19,15 @@ exports.setItemPrice = asyncHandler(async (req, res, next) => {
   });
 
   await LoadoLogs.create({
-    activity: 'itemPriceLogAdded',
-    stringParam: '',
+    activity: "itemPriceLogAdded",
+    stringParam: "",
   });
 
   return res.status(200).json({
     success: true,
   });
 });
+
+// @desc        Save User's interested items
+// @route       POST /loado/api/itemPrice/user
+// @access      Public
