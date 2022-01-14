@@ -327,6 +327,8 @@ const asyncUpdate = async (req_day, hwList) => {
       item.biakiss = false;
       item.kukuseitn = false;
       item.abrel = false;
+      item.abyssDungeon6Types = false;
+      item.abyssDungeon3Nakwon = false;
     }
 
     await UserLoado.findByIdAndUpdate(item._id, item, {

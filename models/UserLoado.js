@@ -63,6 +63,14 @@ const UserLoadoSchema = new mongoose.Schema({
     max: 3,
     required: true,
   },
+  abyssDungeon6Types: {
+    type: Boolean,
+    default: false
+  },
+  abyssDungeon3Nakwon: {
+    type: Boolean,
+    default: false
+  },
   abyssDungeon2: {
     type: Boolean,
     default: false,
