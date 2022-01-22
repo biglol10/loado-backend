@@ -1,15 +1,15 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ItemPriceSchema = new mongoose.Schema({
   createdDttm: {
     type: String,
   },
   itemName: {
-      type: String
+    type: String,
   },
   itemPrice: {
-      type: String
-  }
+    type: Number,
+  },
 });
 
-module.exports = mongoose.model('ItemPriceData', ItemPriceSchema);
+module.exports = mongoose.model("ItemPriceData", ItemPriceSchema);

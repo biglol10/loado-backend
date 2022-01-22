@@ -91,6 +91,10 @@ exports.getDailyLogCounts = asyncHandler(async (req, res, next) => {
   let groupFailSuccess = false;
   let jobGroupingResult;
 
+  await LoadoLogs.create({
+    activity: "viewDashboard",
+  });
+
   // 케릭터 별 그룹핑 카운트
   await UserLoado.aggregate(
     [
