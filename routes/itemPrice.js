@@ -20,6 +20,6 @@ router
 
 router
   .route("/calculateItemPriceAverage")
-  .post(protect, calculateItemPriceAverage);
+  .get(protect, calculateItemPriceAverage);
 
 module.exports = router;
