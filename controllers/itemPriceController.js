@@ -113,12 +113,37 @@ exports.getUserItemInterestPriceTrend = asyncHandler(async (req, res, next) => {
   const itemArray = findUserInterest[0].interestedItemsArray;
 });
 
+// @desc        POST Item Collection Price
+// @route       POST /loado/api/itemPrice/getItemCollectionPrice
+// @access      Private
+exports.getItemCollectionPrice = asyncHandler(async (req, res, next) => {
+  const userItemCollection = req.body.userItemCollection;
+
+  let dataJson = {};
+  const dateValue = moment().add(-6, "days").format("YYYY-MM-DD");
+  Promise.all(
+    userItemCollection.map(async (item) => {
+      dataJson[item] = await ItemPriceAverage.find({
+        itemName: item,
+        createdDttm: { $gte: dateValue },
+      })
+        .select("-_id")
+        .select("-itemName")
+        .select("-__v")
+        .sort("createdDttm");
+    })
+  ).then((param) => {
+    return res.status(200).json({
+      success: true,
+      itemCollectionPrice: dataJson,
+    });
+  });
+});
+
 // @desc        Calculate Item Price Average for each day
 // @route       GET /loado/api/itemPrice/calculateItemPriceAverage
 // @access      Public
 exports.calculateItemPriceAverage = asyncHandler(async (req, res, next) => {
-  moment.tz.setDefault("Asia/Seoul");
-
   const itemList = JSON.parse(
     fs.readFileSync(`${__dirname}/../_data/itemList.json`, "utf-8")
   );
@@ -126,13 +151,16 @@ exports.calculateItemPriceAverage = asyncHandler(async (req, res, next) => {
   try {
     for (let index = 0; index < 7; index++) {
       const dateValue = moment()
+        .tz("Asia/Seoul")
         .add(index * -1, "days")
         .format("YYYY-MM-DD");
 
       itemList.map(async (item) => {
+        const itemElement = item.item.replace("I_", "");
+
         const itemFilter = await ItemPriceData.find({
           createdDttm: { $regex: dateValue, $options: "i" },
-          itemName: item.item,
+          itemName: itemElement,
         });
 
         if (itemFilter.length === 0) return;
@@ -144,19 +172,19 @@ exports.calculateItemPriceAverage = asyncHandler(async (req, res, next) => {
 
         const getExistingLog = await ItemPriceAverage.find({
           createdDttm: dateValue,
-          itemName: item.item,
+          itemName: itemElement,
         });
 
         if (getExistingLog.length !== 0) {
           ItemPriceAverage.findByIdAndUpdate(getExistingLog[0]._id, {
             createdDttm: dateValue,
-            itemName: item.item,
+            itemName: itemElement,
             itemPriceAverage: averageValue,
           });
         } else {
           ItemPriceAverage.create({
             createdDttm: dateValue,
-            itemName: item.item,
+            itemName: itemElement,
             itemPriceAverage: averageValue,
           });
         }

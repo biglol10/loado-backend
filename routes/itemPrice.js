@@ -6,6 +6,7 @@ const {
   getUserItemInterest,
   getUserItemInterestPriceTrend,
   calculateItemPriceAverage,
+  getItemCollectionPrice,
 } = require("../controllers/itemPriceController");
 
 const router = express.Router();
@@ -21,5 +22,7 @@ router
 router
   .route("/calculateItemPriceAverage")
   .get(protect, calculateItemPriceAverage);
+
+router.route("/getItemCollectionPrice").post(protect, getItemCollectionPrice);
 
 module.exports = router;
