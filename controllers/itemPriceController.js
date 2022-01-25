@@ -177,7 +177,7 @@ exports.getUserItemInterestPriceTrend = asyncHandler(async (req, res, next) => {
 exports.getItemCollectionPrice = asyncHandler(async (req, res, next) => {
   const userItemCollection = req.body.userItemCollection;
   let dataJson = {};
-  const dateValue = moment().add(-7, "days").format("YYYY-MM-DD");
+  const dateValue = moment().add(-6, "days").format("YYYY-MM-DD");
   Promise.all(
     userItemCollection.map(async (item) => {
       dataJson[item] = await ItemPriceAverage.find({
