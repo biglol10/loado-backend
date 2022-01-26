@@ -1,12 +1,12 @@
-const ItemPriceData = require("../models/ItemPrice");
-const UserItemTrend = require("../models/UserItemTrend");
-const LoadoLogs = require("../models/LoadoLogs");
-const ItemPriceAverage = require("../models/ItemPriceAverage");
-const ErrorResponse = require("../utils/errorResponse");
-const asyncHandler = require("../middleware/async");
-const fs = require("fs");
-var path = require("path");
-var moment = require("moment");
+const ItemPriceData = require('../models/ItemPrice');
+const UserItemTrend = require('../models/UserItemTrend');
+const LoadoLogs = require('../models/LoadoLogs');
+const ItemPriceAverage = require('../models/ItemPriceAverage');
+const ErrorResponse = require('../utils/errorResponse');
+const asyncHandler = require('../middleware/async');
+const fs = require('fs');
+var path = require('path');
+var moment = require('moment');
 
 // @desc        Save Item price at certain datetime
 // @route       GET /loado/api/itemPrice/setItemPrice
@@ -15,36 +15,36 @@ exports.setItemPrice = asyncHandler(async (req, res, next) => {
   const dateValue = req.body.dateValue;
   const itemParam = req.body.jsonParam;
 
-  itemParam.map((item) => {
-    ItemPriceData.create({
+  itemParam.map(async (item) => {
+    await ItemPriceData.create({
       createdDttm: dateValue,
       itemName: item.itemName,
       itemPrice: item.itemPrice,
     });
   });
 
-  await LoadoLogs.create({
-    activity: "itemPriceLogAdded",
-    stringParam: "",
+  LoadoLogs.create({
+    activity: 'itemPriceLogAdded',
+    stringParam: '',
   });
 
   // 데이터 저장 후 즉시 아이템 평균값 계산 (오늘)
   const itemList = JSON.parse(
-    fs.readFileSync(`${__dirname}/../_data/itemList.json`, "utf-8")
+    fs.readFileSync(`${__dirname}/../_data/itemList.json`, 'utf-8')
   );
 
   try {
     for (let index = 0; index < 1; index++) {
       const dateValue = moment()
-        .tz("Asia/Seoul")
-        .add(index * -1, "days")
-        .format("YYYY-MM-DD");
+        .tz('Asia/Seoul')
+        .add(index * -1, 'days')
+        .format('YYYY-MM-DD');
 
       itemList.map(async (item) => {
         const itemElement = item.item;
 
         const itemFilter = await ItemPriceData.find({
-          createdDttm: { $regex: dateValue, $options: "i" },
+          createdDttm: { $regex: dateValue, $options: 'i' },
           itemName: itemElement,
         });
 
@@ -61,13 +61,13 @@ exports.setItemPrice = asyncHandler(async (req, res, next) => {
         });
 
         if (getExistingLog.length !== 0) {
-          ItemPriceAverage.findByIdAndUpdate(getExistingLog[0]._id, {
+          await ItemPriceAverage.findByIdAndUpdate(getExistingLog[0]._id, {
             createdDttm: dateValue,
             itemName: itemElement,
             itemPriceAverage: averageValue,
           });
         } else {
-          ItemPriceAverage.create({
+          await ItemPriceAverage.create({
             createdDttm: dateValue,
             itemName: itemElement,
             itemPriceAverage: averageValue,
@@ -76,13 +76,13 @@ exports.setItemPrice = asyncHandler(async (req, res, next) => {
       });
     }
     LoadoLogs.create({
-      activity: "itemAverageCalculated",
-      stringParam: moment().format("YYYY-MM-DD HH:mm:ss"),
+      activity: 'itemAverageCalculated',
+      stringParam: moment().format('YYYY-MM-DD HH:mm:ss'),
     });
   } catch (error) {
     LoadoLogs.create({
-      activity: "itemAverageCalculatedError",
-      stringParam: moment().format("YYYY-MM-DD HH:mm:ss"),
+      activity: 'itemAverageCalculatedError',
+      stringParam: moment().format('YYYY-MM-DD HH:mm:ss'),
     });
   }
 
@@ -96,7 +96,7 @@ exports.setItemPrice = asyncHandler(async (req, res, next) => {
 // @access      Private
 exports.setUserItemInterest = asyncHandler(async (req, res, next) => {
   const findUserInterest = await UserItemTrend.find({ user: req.user._id });
-  let stringLog = "";
+  let stringLog = '';
 
   if (findUserInterest.length !== 0) {
     const output = await UserItemTrend.findByIdAndUpdate(
@@ -121,7 +121,7 @@ exports.setUserItemInterest = asyncHandler(async (req, res, next) => {
   }
 
   LoadoLogs.create({
-    activity: "setItemInterest",
+    activity: 'setItemInterest',
     stringParam: stringLog,
   });
 
@@ -137,7 +137,7 @@ exports.getUserItemInterest = asyncHandler(async (req, res, next) => {
   const findUserInterest = await UserItemTrend.find({ user: req.user._id });
 
   LoadoLogs.create({
-    activity: "getItemInterest",
+    activity: 'getItemInterest',
     stringParam: JSON.stringify(findUserInterest),
   });
 
@@ -157,7 +157,7 @@ exports.getUserItemInterestPriceTrend = asyncHandler(async (req, res, next) => {
   const findUserInterest = await UserItemTrend.find({ user: req.user._id });
 
   LoadoLogs.create({
-    activity: "getItemInterestPriceTrend",
+    activity: 'getItemInterestPriceTrend',
     stringParam: JSON.stringify(findUserInterest),
   });
 
@@ -177,17 +177,17 @@ exports.getUserItemInterestPriceTrend = asyncHandler(async (req, res, next) => {
 exports.getItemCollectionPrice = asyncHandler(async (req, res, next) => {
   const userItemCollection = req.body.userItemCollection;
   let dataJson = {};
-  const dateValue = moment().add(-6, "days").format("YYYY-MM-DD");
+  const dateValue = moment().add(-6, 'days').format('YYYY-MM-DD');
   Promise.all(
     userItemCollection.map(async (item) => {
       dataJson[item] = await ItemPriceAverage.find({
         itemName: item,
         createdDttm: { $gte: dateValue },
       })
-        .select("-_id")
-        .select("-itemName")
-        .select("-__v")
-        .sort("createdDttm");
+        .select('-_id')
+        .select('-itemName')
+        .select('-__v')
+        .sort('createdDttm');
 
       // dataJson[item].map(item => item.itemName)
     })
@@ -204,21 +204,21 @@ exports.getItemCollectionPrice = asyncHandler(async (req, res, next) => {
 // @access      Public
 exports.calculateItemPriceAverage = asyncHandler(async (req, res, next) => {
   const itemList = JSON.parse(
-    fs.readFileSync(`${__dirname}/../_data/itemList.json`, "utf-8")
+    fs.readFileSync(`${__dirname}/../_data/itemList.json`, 'utf-8')
   );
 
   try {
-    for (let index = 0; index < 7; index++) {
+    for (let index = 0; index < 1; index++) {
       const dateValue = moment()
-        .tz("Asia/Seoul")
-        .add(index * -1, "days")
-        .format("YYYY-MM-DD");
+        .tz('Asia/Seoul')
+        .add(index * -1, 'days')
+        .format('YYYY-MM-DD');
 
       itemList.map(async (item) => {
         const itemElement = item.item;
 
         const itemFilter = await ItemPriceData.find({
-          createdDttm: { $regex: dateValue, $options: "i" },
+          createdDttm: { $regex: dateValue, $options: 'i' },
           itemName: itemElement,
         });
 
@@ -235,13 +235,13 @@ exports.calculateItemPriceAverage = asyncHandler(async (req, res, next) => {
         });
 
         if (getExistingLog.length !== 0) {
-          ItemPriceAverage.findByIdAndUpdate(getExistingLog[0]._id, {
+          await ItemPriceAverage.findByIdAndUpdate(getExistingLog[0]._id, {
             createdDttm: dateValue,
             itemName: itemElement,
             itemPriceAverage: averageValue,
           });
         } else {
-          ItemPriceAverage.create({
+          await ItemPriceAverage.create({
             createdDttm: dateValue,
             itemName: itemElement,
             itemPriceAverage: averageValue,
@@ -250,13 +250,13 @@ exports.calculateItemPriceAverage = asyncHandler(async (req, res, next) => {
       });
     }
     LoadoLogs.create({
-      activity: "itemAverageCalculated",
-      stringParam: moment().format("YYYY-MM-DD HH:mm:ss"),
+      activity: 'itemAverageCalculated',
+      stringParam: moment().format('YYYY-MM-DD HH:mm:ss'),
     });
   } catch (error) {
     LoadoLogs.create({
-      activity: "itemAverageCalculatedError",
-      stringParam: moment().format("YYYY-MM-DD HH:mm:ss"),
+      activity: 'itemAverageCalculatedError',
+      stringParam: moment().format('YYYY-MM-DD HH:mm:ss'),
     });
   }
 

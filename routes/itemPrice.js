@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 
 const {
   setItemPrice,
@@ -7,22 +7,20 @@ const {
   getUserItemInterestPriceTrend,
   calculateItemPriceAverage,
   getItemCollectionPrice,
-} = require("../controllers/itemPriceController");
+} = require('../controllers/itemPriceController');
 
 const router = express.Router();
 
-const { protect } = require("../middleware/auth");
+const { protect } = require('../middleware/auth');
 
-router.route("/setItemPrice").post(setItemPrice);
+router.route('/setItemPrice').post(setItemPrice);
 router
-  .route("/userItemInterest")
+  .route('/userItemInterest')
   .get(protect, getUserItemInterest)
   .post(protect, setUserItemInterest);
 
-router
-  .route("/calculateItemPriceAverage")
-  .get(protect, calculateItemPriceAverage);
+router.route('/calculateItemPriceAverage').get(calculateItemPriceAverage);
 
-router.route("/getItemCollectionPrice").post(protect, getItemCollectionPrice);
+router.route('/getItemCollectionPrice').post(protect, getItemCollectionPrice);
 
 module.exports = router;
