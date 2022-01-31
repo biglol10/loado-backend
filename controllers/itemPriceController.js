@@ -8,6 +8,63 @@ const fs = require('fs');
 var path = require('path');
 var moment = require('moment');
 
+const medianFunction = (arr) => {
+  const mid = Math.floor(arr.length / 2),
+    nums = [...arr].sort((a, b) => a - b);
+  return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+};
+
+// @desc        Get Item price full log
+// @route       GET /loado/api/itemPrice/getItemPrice/:itemName
+// @access      Private
+exports.getItemPrice = asyncHandler(async (req, res, next) => {
+  const itemName = req.params.itemName;
+  const dateValue = moment()
+    .tz('Asia/Seoul')
+    .add(-6, 'days')
+    .format('YYYY-MM-DD');
+
+  const itemPriceLog = await ItemPriceData.find({
+    itemName,
+    createdDttm: { $gte: dateValue },
+  })
+    .select('-_id')
+    .select('-__v')
+    .sort('-createdDttm');
+
+  const resultCompress = {};
+
+  for (let index = 0; index < 7; index++) {
+    const subDateValue = moment()
+      .tz('Asia/Seoul')
+      .add(index * -1, 'days')
+      .format('YYYY-MM-DD');
+
+    const subResult = itemPriceLog.filter(
+      (item) => item.createdDttm.indexOf(subDateValue) >= 0
+    );
+    if (!subResult.length) continue;
+    resultCompress[subDateValue] = subResult;
+  }
+
+  const averageValue = Math.floor(
+    itemPriceLog.reduce((acc, curr) => {
+      return acc + curr.itemPrice;
+    }, 0) / itemPriceLog.length
+  );
+
+  const medianValue = medianFunction(
+    itemPriceLog.map((item) => item.itemPrice)
+  );
+
+  return res.status(200).json({
+    success: true,
+    averageValue,
+    medianValue,
+    itemPriceLog: resultCompress,
+  });
+});
+
 // @desc        Save Item price at certain datetime
 // @route       GET /loado/api/itemPrice/setItemPrice
 // @access      Public
