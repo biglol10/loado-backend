@@ -233,13 +233,15 @@ exports.getUserItemInterestPriceTrend = asyncHandler(async (req, res, next) => {
 // @access      Private
 exports.getItemCollectionPrice = asyncHandler(async (req, res, next) => {
   const userItemCollection = req.body.userItemCollection;
+  const startDate = req.body.dateStartParam;
+  const endDate = req.body.dateEndParam;
   let dataJson = {};
   const dateValue = moment().add(-6, 'days').format('YYYY-MM-DD');
   Promise.all(
     userItemCollection.map(async (item) => {
       dataJson[item] = await ItemPriceAverage.find({
         itemName: item,
-        createdDttm: { $gte: dateValue },
+        createdDttm: { $gte: startDate, $lte: endDate },
       })
         .select('-_id')
         .select('-itemName')
