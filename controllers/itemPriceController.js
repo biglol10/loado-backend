@@ -239,7 +239,7 @@ exports.getItemCollectionPrice = asyncHandler(async (req, res, next) => {
   const dateValue = moment().add(-6, 'days').format('YYYY-MM-DD');
   Promise.all(
     userItemCollection.map(async (item) => {
-      dataJson[item] = await ItemPriceAverage.find({
+      const fetchData = await ItemPriceAverage.find({
         itemName: item,
         createdDttm: { $gte: startDate, $lte: endDate },
       })
@@ -248,6 +248,8 @@ exports.getItemCollectionPrice = asyncHandler(async (req, res, next) => {
         .select('-__v')
         .sort('createdDttm');
 
+      if (fetchData.length === 0) return;
+      dataJson[item] = fetchData;
       // dataJson[item].map(item => item.itemName)
     })
   ).then((param) => {
