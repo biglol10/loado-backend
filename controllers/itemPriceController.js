@@ -19,14 +19,16 @@ const medianFunction = (arr) => {
 // @access      Private
 exports.getItemPrice = asyncHandler(async (req, res, next) => {
   const itemName = req.params.itemName;
-  const dateValue = moment()
-    .tz('Asia/Seoul')
-    .add(-6, 'days')
+
+  const dateStartParam = req.params.dateStartParam;
+  const dateEndParam = moment(req.params.dateEndParam)
+    .add(1, 'days')
     .format('YYYY-MM-DD');
+  const dateDiff = moment(dateEndParam).diff(moment(dateStartParam), 'days');
 
   const itemPriceLog = await ItemPriceData.find({
     itemName,
-    createdDttm: { $gte: dateValue },
+    createdDttm: { $gte: dateStartParam, $lte: dateEndParam },
   })
     .select('-_id')
     .select('-__v')
@@ -34,7 +36,7 @@ exports.getItemPrice = asyncHandler(async (req, res, next) => {
 
   const resultCompress = {};
 
-  for (let index = 0; index < 7; index++) {
+  for (let index = 0; index < dateDiff; index++) {
     const subDateValue = moment()
       .tz('Asia/Seoul')
       .add(index * -1, 'days')
@@ -43,6 +45,7 @@ exports.getItemPrice = asyncHandler(async (req, res, next) => {
     const subResult = itemPriceLog.filter(
       (item) => item.createdDttm.indexOf(subDateValue) >= 0
     );
+
     if (!subResult.length) continue;
     resultCompress[subDateValue] = subResult;
   }

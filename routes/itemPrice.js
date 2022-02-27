@@ -14,7 +14,9 @@ const router = express.Router();
 
 const { protect } = require('../middleware/auth');
 
-router.route('/getItemPrice/:itemName').get(getItemPrice);
+router
+  .route('/getItemPrice/:itemName/:dateStartParam/:dateEndParam')
+  .get(getItemPrice);
 router.route('/setItemPrice').post(setItemPrice);
 router
   .route('/userItemInterest')
