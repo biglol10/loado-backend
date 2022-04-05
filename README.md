@@ -5,6 +5,10 @@
 
 <br/>
 
+![image](https://user-images.githubusercontent.com/46738034/161679634-8a923e75-f6a2-41ce-b1a8-8f17b706c4fb.png)
+
+<br/>
+
 사용 언어, DB:
   1. Node express
   2. MongoDB, mongoose 패키지
