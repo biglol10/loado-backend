@@ -23,7 +23,8 @@
   1. Heroku - React, Express 배포
   2. AWS EC2 - 06시 배치 api 전송용
   3. EC2 대신 node-cron을 이용해 06시 배치 실행
-  4. C# Selenium application은 EC2 서버에 배포 및 스케줄링
+  4. <del>C# Selenium application은 EC2 서버에 배포 및 스케줄링</del>
+  5. C# selenium을 Node selenium으로 변경 후 Cafe24 linux서버에 docker을 이용한 배포
 
 <br/>
 
