@@ -24,7 +24,7 @@
   2. AWS EC2 - 06시 배치 api 전송용
   3. EC2 대신 node-cron을 이용해 06시 배치 실행
   4. <del>C# Selenium application은 EC2 서버에 배포 및 스케줄링</del>
-  5. C# selenium을 Node selenium으로 변경 후 Cafe24 linux서버에 docker을 이용한 배포
+  5. C# selenium을 Node selenium으로 변경 후 Cafe24 Linux서버에 docker을 이용한 배포
 
 <br/>
 
@@ -49,6 +49,7 @@
   7. Routing에 auth 기능 추가
   8. 최상위 admin 계정과 해당 계정만이 할 수 있는 기능을 통해 전체 유저에게 신규 업데이트 알림을 전송할 수 있는 기능 추가
   9. node-cron 을 사용해 06시 배치 실행 및 key에 암호화를 하여 누구도 배치를 임의로 실행할 수 없게끔 수정
-  10. C# Selenium을 사용해 매 6시간마다 로스트아크 공식 홈페이지에서 아이템에 대한 가격을 가져와서 서버에 전송 (C# application은 EC2에 배포)
+  10. <del>C# Selenium을 사용해 매 6시간마다 로스트아크 공식 홈페이지에서 아이템에 대한 가격을 가져와서 서버에 전송 (C# application은 EC2에 배포)</del>
+  11. Node Selnium으로 변경 후 Linux 서버에 도커로 구동
 
 
